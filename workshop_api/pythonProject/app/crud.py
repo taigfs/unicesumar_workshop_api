@@ -2,7 +2,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from bson.objectid import ObjectId
 
 # Conexão com o banco de dados MongoDB
-client = AsyncIOMotorClient("mongodb://localhost:27017")
+client = AsyncIOMotorClient("mongodb://mongodb:27017")
 db = client["task_manager_db"]
 
 # Função para adicionar um novo usuário

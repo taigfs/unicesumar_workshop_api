@@ -104,3 +104,11 @@ A aplicação tem como objetivo permitir o gerenciamento de projetos e tarefas d
         ```
 
     - Este comando irá criar e rodar os containers Docker do MongoDB e da API REST em Python.
+
+
+## Passos para autenticar no Projeto
+
+1. http://localhost:8000/register
+2. http://localhost:8000/token
+3. Copie o `access_token` e altere em `Collection` > `Variables` dentro do `Postman`.
+4. Teste um endpoint que precise de autenticação, exemplo: http://localhost:8000/projects

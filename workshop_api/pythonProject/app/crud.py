@@ -52,7 +52,6 @@ async def update_project(project_id: str, project_data: dict) -> dict:
         return updated_project
     return None
 
-
 async def delete_project(project_id: str) -> bool:
     project = await retrieve_project(project_id)
     if project:

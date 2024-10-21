@@ -4,7 +4,17 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import timedelta, datetime
 from .models import UserSchema, ProjectCreateSchema, ProjectSchema, CurrentUser
-from .crud import add_user, retrieve_user, add_project, retrieve_user_projects
+from .crud import (
+    add_user,
+    retrieve_user,
+    add_project,
+    retrieve_user_projects,
+    retrieve_project,
+    update_project,
+    delete_project,
+    update_user,  # Adicionando função de atualizar usuários
+    delete_user   # Adicionando função de deletar usuários
+)
 from typing import List
 from uuid import uuid4
 
@@ -95,6 +105,72 @@ async def create_project(project: ProjectCreateSchema, current_user: CurrentUser
 async def list_projects(current_user: CurrentUser = Depends(get_current_user)):
     projects = await retrieve_user_projects(current_user.username)
     return projects
+
+# Rota para atualizar um projeto
+@app.put("/projects/{project_id}", response_model=ProjectSchema)
+async def update_project_route(
+    project_id: str,
+    project_data: ProjectCreateSchema,
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    project = await retrieve_project(project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    if project["owner"] != current_user.username:
+        raise HTTPException(status_code=403, detail="Only the project owner can update the project")
+
+    updated_project = await update_project(project_id, project_data.dict())
+    return updated_project
+
+# Rota para deletar um projeto
+@app.delete("/projects/{project_id}")
+async def delete_project_route(
+    project_id: str,
+    current_user: CurrentUser = Depends(get_current_user)
+):
+    project = await retrieve_project(project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    if project["owner"] != current_user.username:
+        raise HTTPException(status_code=403, detail="Only the project owner can delete the project")
+
+    await delete_project(project_id)
+    return {"message": "Project deleted successfully"}
+
+
+@app.put("/projects/{project_id}", response_model=ProjectSchema)
+async def update_project_route(
+        project_id: str,
+        project_data: ProjectCreateSchema,
+        current_user: CurrentUser = Depends(get_current_user)
+):
+    project = await retrieve_project(project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    if project["owner"] != current_user.username:
+        raise HTTPException(status_code=403, detail="Only the project owner can update the project")
+
+    # Atualizando os campos que vieram no payload
+    updated_data = project_data.dict(exclude_unset=True)
+    updated_project = await update_project(project_id, updated_data)
+
+    if not updated_project:
+        raise HTTPException(status_code=400, detail="Failed to update project")
+
+    return updated_project
+
+
+# Rota para deletar um usuário
+@app.delete("/users/{username}")
+async def delete_user_route(username: str, current_user: CurrentUser = Depends(get_current_user)):
+    if current_user.username != username:
+        raise HTTPException(status_code=403, detail="You can only delete your own profile.")
+
+    deleted = await delete_user(username)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {"message": "User deleted successfully"}
 
 @app.get("/")
 def read_root():

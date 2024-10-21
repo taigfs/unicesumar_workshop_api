@@ -56,9 +56,7 @@ A aplicação tem como objetivo permitir o gerenciamento de projetos e tarefas d
 
 ## Sobre o Projeto Python
 
-# O que é `requirements.txt`?
-
-- O que é?
+- O que é o `requirements.txt`?
     - São arquivos que contém uma lista de dependências de um projeto.
     - Cada linha do arquivo contém o nome de uma dependência e sua versão.
     - Exemplo:
@@ -97,15 +95,12 @@ A aplicação tem como objetivo permitir o gerenciamento de projetos e tarefas d
         docker build -t workshop_api .
         ```
 
-- Como rodar um container Docker?
+- Como rodar os containers Docker deste projeto?
 
-    - Para rodar um container Docker, basta executar o seguinte comando:
+    - Para rodar os containers Docker deste projeto, basta executar os seguintes comandos:
         ```
-        docker run -p 8000:8000 workshop_api
+        cd workshop_api/pythonProject/
+        docker-compose up -d
         ```
 
-    - Para rodar o MongoDB localmente, basta executar o seguinte comando:
-        ```
-        docker run -d -p 27018:27017 --name mongodb mongo:latest
-        ```
-    Este comando irá baixar a imagem do MongoDB e rodar um container com o MongoDB na porta 27018.
+    - Este comando irá criar e rodar os containers Docker do MongoDB e da API REST em Python.

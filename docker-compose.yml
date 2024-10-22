@@ -9,8 +9,6 @@ services:
       - .:/app
     depends_on:
       - mongodb
-    environment:
-      - MONGODB_URI=mongodb://mongodb:27017
 
   mongodb:
     image: mongo:latest

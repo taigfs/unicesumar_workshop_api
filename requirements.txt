@@ -5,3 +5,4 @@ python-jose[cryptography]
 pydantic
 motor  # Para trabalhar com MongoDB de forma assíncrona
 python-multipart
+python-dotenv
